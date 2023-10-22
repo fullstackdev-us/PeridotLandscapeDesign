@@ -112,32 +112,42 @@
 				<div class="row">
 					<div class="col-md-8">
 						<h1>GET IN TOUCH</h1>
-						<form>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<input type="text" class="form-control gt" name="name" id="name" placeholder="Name"/>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<input type="email" class="form-control gt" name="email" id="email" placeholder="Email" />
-										</div>
+						<form id="contactForm" onsubmit="preventDefault()">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<input type="text" class="form-control gt" name="name" id="name" placeholder="Name"/>
 									</div>
 								</div>
-								<div class="row">
-									<div class="col-md-12">
-										<div class="from-group">
-											<textarea class="form-control gt" rows="2" name="message" id="message" placeholder="Message..."></textarea>
-										</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<input type="email" class="form-control gt" name="email" id="email" placeholder="Email" />
 									</div>
 								</div>
-								<div class="form-group"  align="right">
-									<div class="col-sm-offset-2 col-sm-10">
-									  <button type="submit" class="btn btn-tobais btn-send-2">SEND</button>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="from-group">
+										<textarea class="form-control gt" rows="2" name="message" id="message" placeholder="Message..."></textarea>
 									</div>
 								</div>
-							</form>
+							</div>
+							<div id="contactFormError" class="row" style="display: none;">
+								<div class="col-md-12" style="color: black; background-color: rgba(253,0,0,.3); border-radius: 4px;">
+									Oops, an error occurred! How about giving Fawn a call at <a href="tel:2064096733">(206) 409-6733</a> or writing an email to <a href="mailto:info@peridotlandscapedesign.com">info@peridotlandscapedesign.com</a> instead?
+								</div>
+							</div>
+							<div class="form-group"  align="right">
+								<div class="col-sm-offset-2 col-sm-10">
+								  <button 
+									  id="submitButton" 
+									type="button" 
+									class="btn btn-tobais btn-send-2" 
+									onclick="checkCaptcha()"
+									>SEND</button>
+								</div>
+							</div>
+						</form>
 						</div>
 					<div class="col-md-4">
 						<h1>CONTACT INFO</h1>
@@ -218,7 +228,7 @@
 		<script src="assets/js/jquery-3.1.0.min.js"></script>
 		<script src="assets/js/bootstrap.min.js"></script>
 		<script src="assets/js/jquery.magnific-popup.min.js"></script>
-
+		<script src="https://www.google.com/recaptcha/api.js?render=6LfoN8AoAAAAAFeoA492rwc2IZ7IRxBE2cneR_st"></script>
 		<script src="assets/js/script.js"></script>
 
 		<!--  ===== Scroll to Top ====  -->
@@ -230,6 +240,44 @@
 			            scrollTop: 0
 			        }, 700);
 			    });
+			}
+
+			
+			function checkCaptcha() {
+				grecaptcha.ready(function() {
+					grecaptcha.execute('6LfoN8AoAAAAAFeoA492rwc2IZ7IRxBE2cneR_st', {action: 'submit'}).then(function(token) {
+						processContactForm();
+					});
+				});
+			}
+
+			function processContactForm() {
+				const form = document.getElementById('contactForm');
+				var contactFormError = document.getElementById("contactFormError");
+				const formData = new FormData(form);
+
+				var payload = {};
+				formData.forEach((value, key) => payload[key] = value);
+				var json = JSON.stringify(payload);
+
+				var submitButton = document.getElementById("submitButton");
+				submitButton.innerHTML = '<span class="loading-spinner"></span>';
+
+				fetch('/api/contactFormSubmit', {
+					method: 'POST',
+					body: json
+				})
+				.then((res) => {
+					if (!res.ok) {
+						throw new Error();
+					}
+					contactFormError.style.display = "none";
+					submitButton.innerHTML = 'THANK YOU!';
+				})
+				.catch((err) => {
+					contactFormError.style.display = "inherit";
+					submitButton.innerHTML = 'UNABLE TO SEND!';
+				});
 			}
 		</script>
 		
