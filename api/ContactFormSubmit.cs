@@ -26,6 +26,18 @@ namespace PeridotFunctions
                 .AddEnvironmentVariables()
                 .Build();
 
+            //for degbug
+            var obj = new {
+                smtpServer=config["smtpServer"],
+                smtpPort=config["smtpPort"],
+                smtpUserName=config["smtpUserName"],
+                smtpPassword=config["smtpPassword"].Substring(0,5),
+                smtpfromAddress=config["smtpfromAddress"],
+                smtpTargetAddress=config["smtpTargetAddress"]
+            };
+            log.LogInformation(JsonSerializer.Serialize(obj));
+            //end debug
+
             ContactFormModel? formData = null;
             var json = string.Empty;
 
@@ -49,10 +61,10 @@ namespace PeridotFunctions
                 {
                     Host = config["smtpServer"],
                     Port = int.Parse(config["smtpPort"]),
-                    EnableSsl = true,
                     UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(config["smtpUserName"], config["smtpPassword"])
+                    EnableSsl = true
                 };
+                client.Credentials = new NetworkCredential(config["smtpUserName"], config["smtpPassword"]);
 
                 // add from,to mailaddresses
                 var fromTest = config["smtpfromAddress"];
