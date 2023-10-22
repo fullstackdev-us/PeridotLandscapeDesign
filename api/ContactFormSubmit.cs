@@ -27,7 +27,17 @@ namespace PeridotFunctions
                 .AddEnvironmentVariables()
                 .Build();
 
-            ContactFormModel? formData = await JsonSerializer.DeserializeAsync<ContactFormModel>(req.Body);
+            ContactFormModel? formData = null;
+            var json = string.Empty;
+
+            try {
+                json = await req.ReadAsStringAsync();
+                formData = JsonSerializer.Deserialize<ContactFormModel>(json);
+            }
+            catch (Exception e) {
+                log.LogInformation(json);
+                log.LogError(e, "Invalid Request");
+            }
 
             if (formData == null) {
                 log.LogError("No contact form data provided.");

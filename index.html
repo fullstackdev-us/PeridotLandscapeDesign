@@ -449,9 +449,13 @@
 				const form = document.getElementById('contactForm');
 				const formData = new FormData(form);
 
+				var payload = {};
+				formData.forEach((value, key) => payload[key] = value);
+				var json = JSON.stringify(payload);
+
 				fetch('/api/contactFormSubmit', {
 					method: 'POST',
-					body: formData
+					body: json
 				}).then((response) => { 
 					console.log(response)
 				});
