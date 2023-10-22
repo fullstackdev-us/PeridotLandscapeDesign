@@ -6,38 +6,48 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using System.Net;
+using System.Net.Mail;
+using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace PeridotFunctions
 {
     public static class ContactFormSubmit
-    {
+    {        
         [FunctionName("ContactFormSubmit")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+            ILogger log,
+            ExecutionContext context)
         {
+            var config = new ConfigurationBuilder()
+                .SetBasePath(context.FunctionAppDirectory)
+                .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .Build();
+
             ContactFormModel? formData = await JsonSerializer.DeserializeAsync<ContactFormModel>(req.Body);
 
             if (formData == null) {
-                _logger.LogError("No contact form data provided.");
+                log.LogError("No contact form data provided.");
 
-                return;
+                return new BadRequestObjectResult("Form data is required.");
             }
 
             try {
-                SmtpClient mySmtpClient = new SmtpClient(_configuration["smtpServer"])
+                SmtpClient mySmtpClient = new SmtpClient(config["smtpServer"])
                 {
-                    Port = int.Parse(_configuration["smtpPort"]),
+                    Port = int.Parse(config["smtpPort"]),
                     EnableSsl = true,
                     UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(_configuration["smtpUserName"], _configuration["smtpPassword"])
+                    Credentials = new NetworkCredential(config["smtpUserName"], config["smtpPassword"])
                 };
 
                 // add from,to mailaddresses
-                var fromTest = _configuration["smtpfromAddress"];
-                MailAddress from = new MailAddress(_configuration["smtpFromAddress"], "PLD Contact Form");
-                MailAddress to = new MailAddress(_configuration["smtpTargetAddress"], "Peridot Landscape Design LLC");
+                var fromTest = config["smtpfromAddress"];
+                MailAddress from = new MailAddress(config["smtpFromAddress"], "PLD Contact Form");
+                MailAddress to = new MailAddress(config["smtpTargetAddress"], "Peridot Landscape Design LLC");
                 MailMessage myMail = new MailMessage(from, to)
                 {
                     Subject = $"New PLD Contact Form Submission: {formData.Name}",
@@ -57,7 +67,7 @@ namespace PeridotFunctions
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to submit contact form.");
+                log.LogError(ex, "Failed to submit contact form.");
             }
             // log.LogInformation("C# HTTP trigger function processed a request.");
 
@@ -71,7 +81,7 @@ namespace PeridotFunctions
             //     ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
             //     : $"Hello, {name}. This HTTP triggered function executed successfully.";
 
-            // return new OkObjectResult(responseMessage);
+            return new OkObjectResult("OK");
         }
     }
 }
