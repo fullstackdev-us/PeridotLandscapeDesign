@@ -1,6 +1,6 @@
 import nodeMailer from 'nodemailer';
 
-module.exports = async function (context, req) {
+export default async function (context, req) {
     var formData = req.body;
 
     var transporter = nodemailer.createTransport({
