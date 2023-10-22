@@ -1,6 +1,8 @@
 import nodeMailer from 'nodemailer';
 
 module.exports = async function (context, req) {
+    var formData = req.body;
+
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -12,13 +14,13 @@ module.exports = async function (context, req) {
       var mailOptions = {
         from: process.env['smtpFromAddress'],
         to: process.env['smtpTargetAddress'],
-        subject: `New PLD Contact Form Submission: ${formData.Name}`,
+        subject: `New PLD Contact Form Submission: ${formData.name}`,
         html: `
-            <h1>New Contact Request From ${formData.Name}</h1>
+            <h1>New Contact Request From ${formData.name}</h1>
             <h2>Email:</h2>
-            <p>${formData.Email}</p>
+            <p>${formData.email}</p>
             <h2>Message:</h2>
-            <p>${formData.Body}</p>
+            <p>${formData.message}</p>
         `
       };
       
