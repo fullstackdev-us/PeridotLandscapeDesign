@@ -26,23 +26,12 @@ namespace PeridotFunctions
                 .AddEnvironmentVariables()
                 .Build();
 
-            //for degbug
-            var obj = new {
-                smtpServer=config["smtpServer"],
-                smtpPort=config["smtpPort"],
-                smtpUserName=config["smtpUserName"],
-                smtpPassword=config["smtpPassword"].Substring(0,5),
-                smtpfromAddress=config["smtpfromAddress"],
-                smtpTargetAddress=config["smtpTargetAddress"]
-            };
-            log.LogInformation(JsonSerializer.Serialize(obj));
-            //end debug
-
             ContactFormModel? formData = null;
             var json = string.Empty;
 
             try {
                 json = await req.ReadAsStringAsync();
+                log.LogInformation("New submission: "+json);
                 formData = JsonSerializer.Deserialize<ContactFormModel>(json);
             }
             catch (Exception e) {
@@ -57,14 +46,13 @@ namespace PeridotFunctions
             }
 
             try {
-                SmtpClient client = new SmtpClient
+                SmtpClient client = new SmtpClient(config["smtpServer"])
                 {
-                    Host = config["smtpServer"],
                     Port = int.Parse(config["smtpPort"]),
-                    UseDefaultCredentials = false,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    Credentials = new NetworkCredential(config["smtpUserName"], config["smtpPassword"]),
                     EnableSsl = true
                 };
-                client.Credentials = new NetworkCredential(config["smtpUserName"], config["smtpPassword"]);
 
                 // add from,to mailaddresses
                 var fromTest = config["smtpfromAddress"];
@@ -79,7 +67,7 @@ namespace PeridotFunctions
                         <h2>Email:</h2>
                         <p>{formData.Email}</p>
                         <h2>Message:</h2>
-                        <p>{formData.Body}</p>
+                        <p>{formData.Message}</p>
                     ",
                     BodyEncoding = System.Text.Encoding.UTF8,
                     IsBodyHtml = true
