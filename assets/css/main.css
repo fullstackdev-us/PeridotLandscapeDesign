@@ -764,6 +764,17 @@ button[disabled], html input[disabled] {
     display: none;
 }
 
+.title {
+	font-size: 20px;
+}
+
+.about-avatar {
+	width: 230px;
+	height: 230px;
+	border-radius: 50%;
+	margin-bottom: 5rem;
+}
+
 /*---------------------------popup----------------------------*/
 .white-popup {
   position: relative;
@@ -778,7 +789,7 @@ button[disabled], html input[disabled] {
     margin-bottom: 35px;
     margin-left: 15px;
 }
-.popup-parapraph {
+.popup-parapraph,.popup-paragraph-header {
 	padding: 0px 15px;
 }
 .pop-up-icon {
@@ -947,4 +958,12 @@ textarea#message {
 
 .popup-image {
 	box-shadow: 0 0 15px black;
+}
+
+.main-paragraph {
+	max-width: 500px;
+	margin-left: auto;
+  	margin-right: auto;
+	text-align: justify;
+	text-indent: 3rem;
 }
