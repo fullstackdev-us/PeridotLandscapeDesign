@@ -673,6 +673,36 @@ button[disabled], html input[disabled] {
 			margin-right: 0px;
 		}
 
+		.mobile-nav {
+			display: none;
+		}
+
+		.mobile-nav-list {
+			display: flex;
+			align-items: stretch; /* Default */
+			justify-content: space-between;
+			width: 100%;
+			margin: 0;
+			padding-left: 5rem;
+			padding-right: 5rem;
+		}
+
+		.mobile-nav-list-item {
+			display: block;
+			flex: 0 1 auto; /* Default */
+			list-style-type: none;
+		}
+
+		@media screen and (max-width: 768px) {
+			.nav-bars {
+				display: none;
+			}
+
+			.mobile-nav {
+				display: inherit;
+			}
+		}
+
 
 
 
@@ -709,7 +739,7 @@ button[disabled], html input[disabled] {
     opacity: 0.8;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1000px) {
 	.a a .img-hover {
 	top: 0px;
 	bottom: 0px;
@@ -958,6 +988,12 @@ textarea#message {
 
 .popup-image {
 	box-shadow: 0 0 15px black;
+}
+
+@media screen and (max-width: 991px) {
+	.popup-image {
+		display: none;
+	}
 }
 
 .main-paragraph {
