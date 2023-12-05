@@ -739,7 +739,7 @@ button[disabled], html input[disabled] {
     opacity: 0.8;
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 991px) {
 	.a a .img-hover {
 	top: 0px;
 	bottom: 0px;
