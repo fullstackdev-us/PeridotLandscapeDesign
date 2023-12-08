@@ -2,8 +2,8 @@
 	outline: none !important;
 }
 body {
-	font-family: 'Roboto', sans-serif;
-	font-size: 16px;
+	font-family: 'Krub', sans-serif;
+	font-size: 14px;
 }
 
 a:hover {
@@ -15,7 +15,7 @@ blockquote {
 	border-left: 3px solid #333;
 }
 h1, h2, h3, h4, h5, h6{
-	font-family: 'Istok Web', sans-serif;
+	font-family: 'Covered By Your Grace', sans-serif;
 	font-weight: bold;
 }
 textarea {
@@ -750,16 +750,16 @@ button[disabled], html input[disabled] {
 	opacity: 0;
 }
 .a a .img-hover.glass {
-    background: #3e5f4e
+    background: #2d2d02;
 }
 .a a .img-hover.shoes-glass {
-    background: #533046
+    background: #b9b902;
 }
 .a a .img-hover.hand-parts {
-    background: #771d43
+    background: #798e49;
 }
 .a a .img-hover.table-with-phone {
-    background: #f1932f
+    background: #f1932f;
 }
 .a a .img-hover.orange-shoe {
     background: #da9567;
@@ -796,6 +796,7 @@ button[disabled], html input[disabled] {
 
 .title {
 	font-size: 20px;
+	font-weight: 700;
 }
 
 .about-avatar {
