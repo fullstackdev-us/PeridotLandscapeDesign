@@ -799,6 +799,13 @@ button[disabled], html input[disabled] {
 	font-weight: 700;
 }
 
+.subtitle {
+	display: block;
+	font-size: 12px;
+	font-weight: 500;
+	margin-left: 0.1rem;
+}
+
 .about-avatar {
 	width: 230px;
 	height: 230px;
