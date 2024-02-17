@@ -758,6 +758,9 @@ button[disabled], html input[disabled] {
 .a a .img-hover.hand-parts {
     background: #798e49;
 }
+.a a .img-hover.gallery {
+    background: #3b7b52;
+}
 .a a .img-hover.table-with-phone {
     background: #f1932f;
 }
@@ -773,6 +776,7 @@ button[disabled], html input[disabled] {
 .a a .img-hover.egg-arts {
     background: #ddd173;
 }
+
 .a a .img-hover .c-table {
 	display: table;
 	width: 100%;
